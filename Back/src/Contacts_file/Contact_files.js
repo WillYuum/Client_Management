@@ -1,10 +1,10 @@
 import app from "../app";
-import initContactsFile from "./ContactsFile_db";
+import initContactsFile from "./ContactsFile_Controller";
 
 const contacts_filesAPI = async () => {
   const controller = await initContactsFile();
 
-  app.get("/Contact_files/read", async (req, res, next) => {
+  app.get("/contactfiles/read", async (req, res, next) => {
     try {
       const files = await controller.getContactFiles();
 
@@ -14,13 +14,14 @@ const contacts_filesAPI = async () => {
     }
   });
 
-  app.post("/Contact_files/create", async (req, res, next) => {
+  app.post("/contactfiles/create", async (req, res, next) => {
     try {
-      const { contact_username } = req.query;
-      var date_created = new Date();
-      const result = await controller.CreateUserFile({
-        contact_username,
-        date_created
+      const { contactUsername, contactType } = req.body;
+      var dateCreated = new Date();
+      const result = await controller.CreateContactFile({
+        contactUsername,
+        dateCreated,
+        contactType
       });
       res.json({ success: true, result });
     } catch (err) {
@@ -28,22 +29,27 @@ const contacts_filesAPI = async () => {
     }
   });
 
-  app.delete("/Contact_files/delete/:id", async (req, res, next) => {
+  app.delete("/contactfiles/delete/:id", async (req, res, next) => {
     try {
       const { id } = req.params;
-      const result = await controller.deleteUserFile(id);
+      const result = await controller.deleteContactFile(id);
       res.json({ success: true, result });
     } catch (err) {
       next(err);
     }
   });
 
-  app.patch("/Contact_files/update/:id", async (req, res, next) => {
+  app.patch("/contactfiles/update/:id", async (req, res, next) => {
     try {
-      const { id } = req.params;
-      const { username } = req.query;
-      const result = await controller.updateContactFile(id, username);
-      res.json({ success: true, result });
+      const id = await req.params.id;
+      const updateData = {};
+      await Object.keys(req.body).forEach(key => {
+        if (req.body[key] != undefined) {
+          updateData[key] = req.body[key];
+        }
+      });
+      const result = await controller.updateContactFile(id, updateData);
+      await res.json({ success: true, result });
     } catch (err) {
       next(err);
     }
