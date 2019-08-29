@@ -1,0 +1,26 @@
+{
+  "name": "front",
+  "version": "1.0.0",
+  "description": "A client management interface for handling Customers reviews and messages.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "back": "cd back && npm start",
+    "front": "cd front && npm start",
+    "start": "concurrently --kill-others-on-fail --names \"back,front\" \"npm run back\" \"npm run front\""
+
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/liams98/Client_Management.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/liams98/Client_Management/issues"
+  },
+  "homepage": "https://github.com/liams98/Client_Management#readme",
+  "dependencies": {
+    "concurrently": "^4.1.2"
+  }
+}

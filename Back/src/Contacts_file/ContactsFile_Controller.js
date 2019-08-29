@@ -1,4 +1,3 @@
-const mongoose = require("mongoose");
 import uuidv4 from "uuid/v4";
 
 import contactsFile from "../ContactFile_Schema";
@@ -54,8 +53,9 @@ const initContactsFile = async () => {
 
   const deleteContactFile = async id => {
     try {
-      const file = await contactsFile.findById(id);
-      const deleteFile = await file.remove({ _id: file });
+      const deleteFile = contactsFile.findByIdAndDelete(
+        {_id: id}
+      )
       return deleteFile;
     } catch (err) {
       console.log(err);

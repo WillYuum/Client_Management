@@ -1,0 +1,11 @@
+.ContactFilePage-container {
+  background-color: #282C34;
+  width: 80%;
+  height: 100%;
+  overflow: auto;
+  .ContactFilePage-body {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    margin: 50px auto;
+  }
+}

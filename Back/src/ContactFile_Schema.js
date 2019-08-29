@@ -16,7 +16,7 @@ var contactsFile = Schema({
         {
           logId: String,
           info: String,
-          dateCreated: Date,
+          dateCreated: Number,
         }
       ]
     }

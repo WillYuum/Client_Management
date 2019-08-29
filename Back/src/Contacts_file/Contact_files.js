@@ -31,7 +31,7 @@ const contacts_filesAPI = async () => {
 
   app.delete("/contactfiles/delete/:id", async (req, res, next) => {
     try {
-      const { id } = req.params;
+      const id = req.params.id;
       const result = await controller.deleteContactFile(id);
       res.json({ success: true, result });
     } catch (err) {
@@ -41,7 +41,8 @@ const contacts_filesAPI = async () => {
 
   app.patch("/contactfiles/update/:id", async (req, res, next) => {
     try {
-      const id = await req.params.id;
+      console.log("HERE",req.body)
+      const id = await req.params;
       const updateData = {};
       await Object.keys(req.body).forEach(key => {
         if (req.body[key] != undefined) {
