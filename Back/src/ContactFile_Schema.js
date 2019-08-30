@@ -4,19 +4,19 @@ var contactsFile = Schema({
   _id: String,
   contactUsername: String,
   contactType: String,
-  dateCreated: Date,
+  dateCreated: String,
   cases: [
     {
       caseId: String,
       caseTitle: String,
       messageType: String,
       status: Number,
-      dateCreated: Number,
+      dateCreated: String,
       logs: [
         {
           logId: String,
           info: String,
-          dateCreated: Number,
+          dateCreated: String,
         }
       ]
     }

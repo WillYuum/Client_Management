@@ -19,7 +19,7 @@ class ContactFile extends Component {
 
   renderView = () => {
     //nomral props
-    const { key, contactUsername, contactType, dateCreated } = this.props;
+    const { contactId, contactUsername, contactType, dateCreated } = this.props;
     // func props
     const { deleteFunc } = this.props;
 
@@ -28,7 +28,7 @@ class ContactFile extends Component {
         <div className="ContactFile-body">
           <Card bg="light" style={{ width: "20rem", height: "18rem" }}>
             <Card.Header>
-              <button onClick={() => deleteFunc(key)}>X</button>
+              <button onClick={() => deleteFunc(contactId)}>X</button>
               <div>
                 Date Created:
                 {dateCreated}
@@ -53,8 +53,8 @@ class ContactFile extends Component {
     e.preventDefault();
     const contactUsername = e.target.contactName.value;
     const contactType = e.target.contactType.value;
-    console.log(contactUsername)
-    console.log(contactType)
+    console.log(contactUsername);
+    console.log(contactType);
 
     const { contactId, updateFunc } = this.props;
 
@@ -75,11 +75,19 @@ class ContactFile extends Component {
               </div>
             </Card.Header>
             <form onSubmit={this.onSubmit} onReset={this.toggleEditMode}>
-              <input type="text" name="contactName" defaultValue={contactUsername}/>
-              <input type="text" name="contactType" defaultValue={contactType}/>
+              <input
+                type="text"
+                name="contactName"
+                defaultValue={contactUsername}
+              />
+              <input
+                type="text"
+                name="contactType"
+                defaultValue={contactType}
+              />
 
-              <input type="submit" value="Save"/>
-              <input type="reset" value="cancel"/>
+              <input type="submit" value="Save" />
+              <input type="reset" value="cancel" />
             </form>
           </Card>
         </div>

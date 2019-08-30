@@ -13,10 +13,11 @@ const initContactsFile = async () => {
   };
 
   const CreateContactFile = async props => {
-    let { contactUsername, dateCreated, contactType } = props;
+    let { contactUsername, contactType, dateCreated } = props;
     if (!props || !contactUsername || !dateCreated || !contactType) {
       throw new Error(
-        "You must add a username/contact-Type and date so you can create a contact file"
+        `You must add a username/contact-Type and date so you can create a contact file${contactUsername}`
+        
       );
     }
     try {
@@ -35,16 +36,27 @@ const initContactsFile = async () => {
   };
 
   const updateContactFile = async (id, props) => {
-    // const {contactUsername, contactType} = props;
     if (!id) {
       throw new Error("you did not provide with an id for ContactFile ");
     }
     try {
-      const updateFiles = await contactsFile.findByIdAndUpdate(
+      const { contactUsername, contactType } = props;
+
+      return contactsFile.findByIdAndUpdate(
         { _id: id },
-        props
+        {
+          contactUsername,
+          contactType
+        },
+        { new: true },
+        (err, updatedFile) => {
+          if (err) {
+            throw new Error("update controller failed");
+          } else {
+            return updatedFile;
+          }
+        }
       );
-      return updateFiles;
     } catch (err) {
       console.log(err);
       throw new Error(`could not update contact_file username with id = ${id}`);
@@ -53,10 +65,13 @@ const initContactsFile = async () => {
 
   const deleteContactFile = async id => {
     try {
-      const deleteFile = contactsFile.findByIdAndDelete(
-        {_id: id}
-      )
-      return deleteFile;
+      return contactsFile.findByIdAndDelete({ _id: id }, (err, msg) => {
+        if (err) {
+          throw new Error("delete controller failed");
+        } else {
+          return;
+        }
+      });
     } catch (err) {
       console.log(err);
       throw new Error("contact file didn't get deleted");

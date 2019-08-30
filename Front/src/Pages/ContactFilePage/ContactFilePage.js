@@ -1,4 +1,8 @@
 import React from "react";
+import Button from "react-bootstrap/Button";
+import Card from "react-bootstrap/Card";
+
+import { CreateTime } from "../../utils/utils.js";
 
 import "./ContactFilePage.scss";
 
@@ -8,11 +12,17 @@ class ContactFilePage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      ContactData: []
+      ContactData: [],
+      createMode: false
     };
   }
 
-  async componentDidMount() {
+  toggleCreateMode = () => {
+    const createMode = !this.state.createMode;
+    this.setState({ createMode });
+  };
+
+  componentDidMount() {
     this.getContactFiles();
   }
 
@@ -28,6 +38,52 @@ class ContactFilePage extends React.Component {
     }
   };
 
+  createContactFile = async param => {
+    const { contactUsername, contactType, dateCreated } = param;
+    if (!param || !contactUsername || !contactType) {
+      throw new Error(
+        "you need to provide with contactUsername and contactType"
+      );
+    }
+    try {
+      const req = await fetch("http://localhost:3001/contactfiles/create", {
+        method: "POST",
+        body: JSON.stringify(param),
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        }
+      });
+      console.log(param);
+      const answer = await req.json();
+      if (answer.success) {
+        const newContact = {
+          _id: answer.id,
+          contactUsername,
+          contactType,
+          dateCreated
+        };
+        debugger;
+
+        
+        const ContactData = [...this.state.ContactData];
+        ContactData.push(newContact);
+        
+        this.this.setState({ ContactData });
+      }
+    } catch (err) {
+      throw new Error("creating contact failed");
+    }
+  };
+
+  SubmitContact = e => {
+    e.preventDefault();
+    const contactUsername = e.target.contactName.value;
+    const contactType = e.target.contactType.value;
+    const dateCreated = CreateTime();
+    this.createContactFile({ contactUsername, contactType, dateCreated });
+  };
+
   updateContactFile = async (id, param) => {
     const { contactUsername, contactType } = param;
     if (!param || !contactUsername || !contactType) {
@@ -41,7 +97,7 @@ class ContactFilePage extends React.Component {
       const res = await fetch(
         `http://localhost:3001/contactfiles/update/${id}`,
         {
-          method: "POST",
+          method: "PATCH",
           body: JSON.stringify(param),
           headers: {
             Accept: "application/json",
@@ -51,18 +107,20 @@ class ContactFilePage extends React.Component {
       );
       console.log(res);
       const answer = await res.json();
+
       if (answer.success) {
         const contactFile = this.state.ContactData.map(file => {
-          if (file.id === id) {
-            const updated_contact = {
-              contactName: contactUsername || file.contactusername,
-              contactType: contactType || file.contactType
+          if (file._id === id) {
+            return {
+              contactUsername: contactUsername || file.contactusername,
+              contactType: contactType || file.contactType,
+              dateCreated: file.dateCreated
             };
-            return updated_contact;
           } else {
             return file;
           }
         });
+        this.setState({ ContactData: contactFile });
         return contactFile;
       }
     } catch (err) {
@@ -74,17 +132,20 @@ class ContactFilePage extends React.Component {
   deleteContactFile = async id => {
     try {
       const req = await fetch(
-        `http://localhost:3001/contactfiles/delete/${id}`
+        `http://localhost:3001/contactfiles/delete/${id}`,
+        {
+          method: "DELETE"
+        }
       );
       console.log(req);
       const answer = await req.json();
 
       if (answer.success) {
         console.log("it got deleted");
-        const ContactData = this.state.ContactData.filter(file => {
+        const updatedContacts = this.state.ContactData.filter(file => {
           return file._id !== id;
         });
-        this.setState(ContactData);
+        this.setState({ ContactData: updatedContacts });
       }
     } catch (err) {
       console.log(err);
@@ -92,10 +153,49 @@ class ContactFilePage extends React.Component {
     }
   };
 
+  renderCreateContact = () => {
+    return (
+      <div className="ContactFile-container">
+        <div className="ContactFile-body">
+          <Card bg="light" style={{ width: "20rem", height: "18rem" }}>
+            <Card.Header>
+              <div>
+                Date Created:
+                {CreateTime()}
+              </div>
+            </Card.Header>
+            <form onSubmit={this.SubmitContact} onReset={this.toggleCreateMode}>
+              <input
+                type="text"
+                name="contactName"
+                placeholder="Contact Username"
+                required
+              />
+              <input
+                type="text"
+                name="contactType"
+                placeholder="Contact Type"
+                required
+              />
+
+              <input type="submit" value="Save" />
+              <input type="reset" value="cancel" />
+            </form>
+          </Card>
+        </div>
+      </div>
+    );
+  };
+
   render() {
-    const { ContactData } = this.state;
+    const { ContactData, createMode } = this.state;
     return (
       <div className="ContactFilePage-container">
+        <nav className="ContactFilePage-navBar">
+          <Button variant="outline-dark" onClick={this.toggleCreateMode}>
+            Create Contact
+          </Button>
+        </nav>
         <div className="ContactFilePage-body">
           {ContactData.map(file => {
             return (
@@ -110,6 +210,7 @@ class ContactFilePage extends React.Component {
               />
             );
           })}
+          {createMode ? this.renderCreateContact() : false}
         </div>
       </div>
     );

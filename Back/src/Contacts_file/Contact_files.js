@@ -16,12 +16,11 @@ const contacts_filesAPI = async () => {
 
   app.post("/contactfiles/create", async (req, res, next) => {
     try {
-      const { contactUsername, contactType } = req.body;
-      var dateCreated = new Date();
+      const { contactUsername, contactType, dateCreated } = req.body;
       const result = await controller.CreateContactFile({
         contactUsername,
+        contactType,
         dateCreated,
-        contactType
       });
       res.json({ success: true, result });
     } catch (err) {
@@ -31,9 +30,9 @@ const contacts_filesAPI = async () => {
 
   app.delete("/contactfiles/delete/:id", async (req, res, next) => {
     try {
-      const id = req.params.id;
+      const id = await req.params.id;
       const result = await controller.deleteContactFile(id);
-      res.json({ success: true, result });
+      res.send({ success: true, result });
     } catch (err) {
       next(err);
     }
@@ -41,15 +40,16 @@ const contacts_filesAPI = async () => {
 
   app.patch("/contactfiles/update/:id", async (req, res, next) => {
     try {
-      console.log("HERE",req.body)
-      const id = await req.params;
+      const id = await req.params.id;
       const updateData = {};
-      await Object.keys(req.body).forEach(key => {
+       Object.keys(req.body).forEach(key => {
         if (req.body[key] != undefined) {
           updateData[key] = req.body[key];
         }
       });
+      console.log("UPDATEDATA",updateData)
       const result = await controller.updateContactFile(id, updateData);
+      console.log(result)
       await res.json({ success: true, result });
     } catch (err) {
       next(err);
