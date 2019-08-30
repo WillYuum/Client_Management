@@ -40,7 +40,7 @@ class ContactFilePage extends React.Component {
 
   createContactFile = async param => {
     const { contactUsername, contactType, dateCreated } = param;
-    if (!param || !contactUsername || !contactType) {
+    if (!param || !contactUsername || !contactType || !dateCreated) {
       throw new Error(
         "you need to provide with contactUsername and contactType"
       );
@@ -56,20 +56,20 @@ class ContactFilePage extends React.Component {
       });
       console.log(param);
       const answer = await req.json();
+      console.log(answer);
       if (answer.success) {
+        const data = answer.result;
         const newContact = {
-          _id: answer.id,
-          contactUsername,
-          contactType,
-          dateCreated
+          _id: data._id,
+          contactUsername: data.contactUsername,
+          contactType: data.contactType,
+          dateCreated: data.dateCreated
         };
-        debugger;
 
-        
         const ContactData = [...this.state.ContactData];
         ContactData.push(newContact);
-        
-        this.this.setState({ ContactData });
+
+        this.setState({ ContactData });
       }
     } catch (err) {
       throw new Error("creating contact failed");
@@ -82,6 +82,7 @@ class ContactFilePage extends React.Component {
     const contactType = e.target.contactType.value;
     const dateCreated = CreateTime();
     this.createContactFile({ contactUsername, contactType, dateCreated });
+    this.toggleCreateMode();
   };
 
   updateContactFile = async (id, param) => {
