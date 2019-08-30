@@ -1,0 +1,10 @@
+.CasePage-container {
+  background-color: #282c34;
+  width: 80%;
+  overflow: auto;
+  .ContactFilePage-body {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    margin: 50px auto;
+  }
+}

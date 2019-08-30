@@ -3,9 +3,33 @@ import uuidv4 from "uuid/v4";
 import contactsFile from "../ContactFile_Schema";
 
 const initCaseFiles = async () => {
+
+  const getCaseFiles = async (id) =>{
+
+    if(!id){
+      throw new Error(`Case id = ${id} is not found`);
+    }
+
+    try{
+      const getCases = await contactsFile.findById(
+        {_id: id},
+        (err,data)=>{
+          if(err){
+            throw new Error("something went wrong while getting data")
+          }else{
+            return data
+          }
+        }
+      )
+      return getCases.cases;
+    }catch(err){
+      throw new Error("getting cases failed")
+    }
+  }
+
   const addCaseFile = async (id, props) => {
-    const { caseTitle, messageType, status, dateCreated } = props;
-    if (!caseTitle || !messageType || !status || !dateCreated) {
+    const { caseTitle, caseType, status, dateCreated } = props;
+    if (!caseTitle || !caseType || !status || !dateCreated) {
       throw new Error(
         "you didn't provide with the full input for creating a case"
       );
@@ -19,7 +43,7 @@ const initCaseFiles = async () => {
             cases: {
               caseId: uuidv4(),
               caseTitle,
-              messageType,
+              caseType,
               status,
               dateCreated,
               logs: []
@@ -67,6 +91,7 @@ const initCaseFiles = async () => {
   };
 
   const controller = {
+    getCaseFiles,
     addCaseFile,
     deleteCaseFile,
     updateCase

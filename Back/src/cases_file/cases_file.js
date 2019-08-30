@@ -5,17 +5,28 @@ import initCaseFiles from "./casesfile_Controller";
 const caseFilesAPI = async () => {
   const controller = await initCaseFiles();
 
+  app.get("/case/read/:id", async (req,res,next)=>{
+    try{
+    const id = req.params.id;
+    const result = await controller.getCaseFiles(id);
+    res.json({success: true, result});
+    }catch(err){
+      next(err);
+    }
+
+  })
+
+
   app.post("/case/create/:id", async (req, res, next) => {
     try {
       const id = req.params.id;
-      const { caseTitle, messageType, status, dateCreated } = req.body;
+      const { caseTitle, caseType, status, dateCreated } = req.body;
       const result = await controller.addCaseFile(id, {
         caseTitle,
-        messageType,
+        caseType,
         status,
         dateCreated
       });
-      console.log(result);
       res.json({ success: true, result });
     } catch (err) {
       next(err);

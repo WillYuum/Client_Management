@@ -9,7 +9,7 @@ var contactsFile = Schema({
     {
       caseId: String,
       caseTitle: String,
-      messageType: String,
+      caseType: String,
       status: Number,
       dateCreated: String,
       logs: [

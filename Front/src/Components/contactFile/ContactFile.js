@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
+import { Link } from "react-router-dom";
 
 import "./ContactFile.scss";
 
@@ -21,7 +22,7 @@ class ContactFile extends Component {
     //nomral props
     const { contactId, contactUsername, contactType, dateCreated } = this.props;
     // func props
-    const { deleteFunc } = this.props;
+    const { EnterCaseFile, deleteFunc } = this.props;
 
     return (
       <div className="ContactFile-container">
@@ -39,7 +40,14 @@ class ContactFile extends Component {
               <Card.Title>Contact: {contactUsername}</Card.Title>
               <Card.Text>Contact Type: {contactType}</Card.Text>
             </Card.Body>
-            <Button variant="outline-dark">Enter File</Button>
+            <Link to={`/case/${contactId}`}>
+              <Button
+                variant="outline-dark"
+                onClick={() => EnterCaseFile(contactId)}
+              >
+                Enter File
+              </Button>
+            </Link>
             <Button variant="outline-dark" onClick={this.toggleEditMode}>
               Edit
             </Button>

@@ -190,6 +190,7 @@ class ContactFilePage extends React.Component {
 
   render() {
     const { ContactData, createMode } = this.state;
+    const {EnterCaseFile} = this.props
     return (
       <div className="ContactFilePage-container">
         <nav className="ContactFilePage-navBar">
@@ -208,6 +209,7 @@ class ContactFilePage extends React.Component {
                 dateCreated={file.dateCreated}
                 deleteFunc={this.deleteContactFile}
                 updateFunc={this.updateContactFile}
+                EnterCaseFile={EnterCaseFile}
               />
             );
           })}
