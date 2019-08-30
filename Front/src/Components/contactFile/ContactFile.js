@@ -41,13 +41,11 @@ class ContactFile extends Component {
               <Card.Text>Contact Type: {contactType}</Card.Text>
             </Card.Body>
             <Link to={`/case/${contactId}`}>
-              <Button
-                variant="outline-dark"
-                onClick={() => EnterCaseFile(contactId)}
-              >
+              <button className = "ContactFile-button"onClick={() => EnterCaseFile(contactId)}>
                 Enter File
-              </Button>
+              </button>
             </Link>
+
             <Button variant="outline-dark" onClick={this.toggleEditMode}>
               Edit
             </Button>

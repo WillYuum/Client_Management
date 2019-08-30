@@ -13,9 +13,9 @@ class CasePage extends Component {
       CaseData: []
     };
   }
-  componentWillMount= ()=>{
-    this.getCase(this.props.contactId)
-  }
+  componentWillMount = () => {
+    this.getCase(this.props.contactId);
+  };
 
   getCase = async id => {
     if (!id) {
@@ -31,28 +31,32 @@ class CasePage extends Component {
   };
 
   render() {
-    console.log("check here willy",this.props.contactId)
+    console.log("check here willy", this.props.contactId);
     console.log(this.state.CaseData);
     const { CaseData } = this.state;
     const { leaveCaseFile } = this.props;
     return (
       <div className="CasePage-container">
-        <Link to="/">
-          <Button variant="dark" onClick={() => leaveCaseFile()}>
-            Go Back
-          </Button>
-        </Link>
-        {CaseData.map(caseFile => {
-          return (
-            <CaseFile
-              caseId={caseFile.caseId}
-              caseTitle={caseFile.caseTitle}
-              caseType={caseFile.caseType}
-              status={caseFile.status}
-              dateCreated={caseFile.dateCreated}
-            />
-          );
-        })}
+        <nav>
+          <Link to="/">
+            <Button variant="dark" onClick={() => leaveCaseFile()}>
+              Go Back
+            </Button>
+          </Link>
+        </nav>
+        <div className="CasePage-body">
+          {CaseData.map(caseFile => {
+            return (
+              <CaseFile
+                caseId={caseFile.caseId}
+                caseTitle={caseFile.caseTitle}
+                caseType={caseFile.caseType}
+                status={caseFile.status}
+                dateCreated={caseFile.dateCreated}
+              />
+            );
+          })}
+        </div>
       </div>
     );
   }
